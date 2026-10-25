@@ -1,5 +1,5 @@
 /* Only Us starter. Configure project URL, publishable/anon key and UPI ID. */
-const SUPABASE_URL='https://mluhnmowcsdihbkxgruv.supabase.co⁠';
+const SUPABASE_URL='https://mluhnmowcsdihbkxgruv.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_ZXNrKypryT-jfPxEdip6kg_SI3XaB8x';
 const PAYMENT_UPI_ID='8146428474@fam';
 const ACCESS_CODE='2580'; // visual shortcut only, NOT authentication
