@@ -24,7 +24,12 @@ document.addEventListener('click', function(event) {
   const key = button.getAttribute('data-key');
   calcKey(key);
 });
-document.addEventListener('keydown',e=>{if(!$('calculator').classList.contains('hidden')){if(/[0-9.+*/()%()-]/.test(e.key)&&e.key.length===1)calcKey(({'*':'×','/':'÷','-':'−'})[e.key]||e.key);else if(e.key==='Enter')calcKey('=');else if(e.key==='Escape')calcKey('AC');}});
+document.querySelectorAll('button[data-key]').forEach(function(button) {
+  button.onclick = function() {
+    document.getElementById('calcDisplay').textContent =
+      'TEST ' + button.getAttribute('data-key');
+  };
+});
 $('signInBtn').addEventListener('click',async()=>{if(!requireConfig())return;const email=$('email').value.trim(),password=$('password').value;if(!email||!password){notice('Enter your email and password.','error');return;}const {error}=await supabase.auth.signInWithPassword({email,password});if(error)notice(error.message,'error');else notice('Signed in.','success');});
 $('signUpBtn').addEventListener('click',async()=>{if(!requireConfig())return;const email=$('email').value.trim(),password=$('password').value;if(!email||password.length<8){notice('Enter an email and password with at least 8 characters.','error');return;}const {data,error}=await supabase.auth.signUp({email,password});if(error)notice(error.message,'error');else if(!data.session)notice('Account created. Check your email to confirm, then sign in.','success');else notice('Account created.','success');});
 $('signOutBtn').addEventListener('click',async()=>{if(supabase)await supabase.auth.signOut();currentUser=null;currentProfile=null;closeChat();$('homePanel').classList.add('hidden');$('authPanel').classList.remove('hidden');notice('Signed out.');});
