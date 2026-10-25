@@ -2,7 +2,7 @@
 const SUPABASE_URL='https://mluhnmowcsdihbkxgruv.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_ZXNrKypryT-jfPxEdip6kg_SI3XaB8x';
 const PAYMENT_UPI_ID='8146428474@fam';
-const ACCESS_CODE='2580'; // visual shortcut only, NOT authentication
+const ACCESS_CODE='2511'; // visual shortcut only, NOT authentication
 const ADMIN_EMAIL='singjaskaran68@gmail.com';
 const $=id=>document.getElementById(id);
 let supabase=null,currentUser=null,currentProfile=null,chatChannel=null,display='0',justCalculated=false,mediaRecorder=null,recordedChunks=[];
