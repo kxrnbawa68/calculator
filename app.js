@@ -15,7 +15,15 @@ function configured(){return SUPABASE_URL.startsWith('https://')&&!SUPABASE_URL.
 function requireConfig(){if(!configured()){notice('Setup needed: add your Supabase URL, publishable/anon key, UPI ID and run supabase-schema.sql.','error');return false;}return true;}
 function showSecretArea(){$('calculator').classList.add('hidden');$('app').classList.remove('hidden');}
 function calcKey(key){if(key==='AC'){display='0';justCalculated=false;}else if(key==='='){if(display===ACCESS_CODE){showSecretArea();return;}try{const safe=display.replaceAll('×','*').replaceAll('÷','/').replaceAll('−','-');if(!/^[0-9+*/().%\s-]+$/.test(safe))throw Error();const result=Function('"use strict";return ('+safe+')')();if(!Number.isFinite(result))throw Error();display=String(Number(result.toFixed(8)));justCalculated=true;}catch{display='Error';justCalculated=true;}}else if(key==='±'){display=display.startsWith('-')?display.slice(1):'-'+display;}else if(key==='%'){try{display=String(Number(display)/100)}catch{display='0'}}else{if(display==='Error'||(justCalculated&&/[0-9.]/.test(key)))display='0';if(display==='0'&&/[0-9]/.test(key))display=key;else display+=key;justCalculated=false;}$('calcDisplay').textContent=display;}
-document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',()=>calcKey(b.dataset.key)));
+document.addEventListener('click', function(event) {
+  const button = event.target.closest('button[data-key]');
+  if (!button) return;
+
+  event.preventDefault();
+
+  const key = button.getAttribute('data-key');
+  calcKey(key);
+});
 document.addEventListener('keydown',e=>{if(!$('calculator').classList.contains('hidden')){if(/[0-9.+*/()%()-]/.test(e.key)&&e.key.length===1)calcKey(({'*':'×','/':'÷','-':'−'})[e.key]||e.key);else if(e.key==='Enter')calcKey('=');else if(e.key==='Escape')calcKey('AC');}});
 $('signInBtn').addEventListener('click',async()=>{if(!requireConfig())return;const email=$('email').value.trim(),password=$('password').value;if(!email||!password){notice('Enter your email and password.','error');return;}const {error}=await supabase.auth.signInWithPassword({email,password});if(error)notice(error.message,'error');else notice('Signed in.','success');});
 $('signUpBtn').addEventListener('click',async()=>{if(!requireConfig())return;const email=$('email').value.trim(),password=$('password').value;if(!email||password.length<8){notice('Enter an email and password with at least 8 characters.','error');return;}const {data,error}=await supabase.auth.signUp({email,password});if(error)notice(error.message,'error');else if(!data.session)notice('Account created. Check your email to confirm, then sign in.','success');else notice('Account created.','success');});
